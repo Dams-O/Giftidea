@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>{{ object }}</h1>
+    {% if object.detail %}
+        <p>{{ object.detail }}</p>
+    {% else %}
+        <p>Aucun détail sur le produit</p>
+    {% endif %}
+</body>
+</html>

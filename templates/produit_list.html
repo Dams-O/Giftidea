@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>Produits</h1>
+    <ul>
+
+    {% for produit in object_list %}
+        <li>
+            <a href="{% url 'produit-detail' produit.pk %}">
+                {{ produit }}
+            </a>
+        </li>
+    {% empty %}
+        <li>Aucun produit actuellement.</li>
+    {% endfor %}
+    </ul>
+</body>
+</html>
