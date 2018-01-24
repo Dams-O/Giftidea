@@ -13,20 +13,27 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, static
 from django.utils.translation import ugettext_lazy as _
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
-from app.views import CadeauxListView, CadeauDetailView, IndexView, LoginView
+from app.views import CadeauxListView, CadeauDetailView, IndexView, LoginView, \
+    RegisterView
+from giftideas import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^cadeau/(?P<pk>[-\w]+)/$', CadeauDetailView.as_view(),
         name='produit-detail'),
+
+    url(r'^public/(?P<path>.*)$', static.serve, {
+        'document_root': settings.MEDIA_ROOT
+    }, name='url_public'),
 ]
 
 urlpatterns += i18n_patterns(
     url(_(r'^$'), IndexView.as_view(), name="index"),
     url(_(r'gifts'), CadeauxListView.as_view()),
+    url(_(r'register'), RegisterView.as_view()),
     url(_(r'login'), LoginView.as_view()),
 )

@@ -1,12 +1,14 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 
 from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic import ListView, DetailView
 
 from app.forms.login import LoginForm
-from app.models import Produit
+from app.forms.register import RegisterForm
+from app.models import Produit, Personne
 
 
 class CadeauxView(generic.TemplateView):
@@ -29,6 +31,32 @@ class CadeauDetailView(DetailView):
 
 class IndexView(generic.TemplateView):
     template_name = 'index.html'
+
+
+class RegisterView(generic.FormView):
+    template_name = 'register.html'
+    form_class = RegisterForm
+    success_url = reverse_lazy('index')
+
+    def form_valid(self, form):
+        username = form.cleaned_data.get('username')
+        password1 = form.cleaned_data.get('password1')
+        password2 = form.cleaned_data.get('password2')
+        if password1 != password2:
+            form.add_error(None,
+                           'Passwords do not match')
+            return super(RegisterView, self).form_invalid(form)
+
+        user = User.objects.create_user(username=username,
+                                        password=password1)
+        user.is_active = True
+        user.save()
+        personne = Personne.objects.create(user=user,)
+        # ajouter tous les autres champs pour la personne
+        personne.save()
+        # la connecter automatiquement
+        login(self.request, user)
+        return super(RegisterView, self).form_valid(form)
 
 
 class LoginView(generic.FormView):

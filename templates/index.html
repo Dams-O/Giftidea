@@ -28,6 +28,11 @@
             This is my new website!
         {% endblocktrans %}</p>
 
+        {% for actor in mon_film.actors.all %}
+            {{ actor.description }}
+        {% endfor %}
+
+
         {% if user.is_authenticated %}
             <h1>Bonjour,
                 {{ user.personne.description }}
